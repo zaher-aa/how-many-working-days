@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Working Days Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      select,
+      input[type='submit'] {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+      }
+
+      select {
+        width: 200px;
+        margin-bottom: 20px;
+      }
+
+      input[type='submit'] {
+        width: 150px;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      input[type='submit']:hover {
+        background-color: #388e3c;
+      }
+
+      #result {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Working Days Calculator</h1>
+    <form id="workingDaysForm">
+      <label for="monthSelect">Select a month:</label>
+      <select id="monthSelect" required>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <input type="submit" value="Calculate" />
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      function calculateWorkingDays() {
+        var monthSelect = document.getElementById('monthSelect');
+        var selectedMonth = parseInt(monthSelect.value);
+        var year = new Date().getFullYear();
+
+        var startDate = new Date(year, selectedMonth - 2, 26);
+        var startDateDayOfWeek = startDate.toLocaleString('en-US', {
+          weekday: 'long',
+        });
+
+        if (startDateDayOfWeek === 'Saturday') {
+          startDate.setDate(startDate.getDate() + 2);
+        } else if (startDateDayOfWeek === 'Sunday') {
+          startDate.setDate(startDate.getDate() + 1);
+        }
+
+        var endDate = new Date(year, selectedMonth - 1, 25);
+        var endDateDayOfWeek = endDate.toLocaleString('en-US', {
+          weekday: 'long',
+        });
+
+        if (endDateDayOfWeek === 'Saturday') {
+          endDate.setDate(endDate.getDate() - 1);
+        } else if (endDateDayOfWeek === 'Sunday') {
+          endDate.setDate(endDate.getDate() - 2);
+        }
+
+        var workingDays = 0;
+        var offDays = 0;
+
+        while (startDate <= endDate) {
+          var dayOfWeek = startDate.getDay();
+          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+            workingDays++;
+          } else {
+            offDays++;
+          }
+          startDate.setDate(startDate.getDate() + 1);
+        }
+
+        document.getElementById(
+          'result'
+        ).innerHTML = `Number of working days: ${workingDays} <br />
+          Number of off days: ${offDays}`;
+      }
+
+      var form = document.getElementById('workingDaysForm');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        calculateWorkingDays();
+      });
+    </script>
+  </body>
+</html>
